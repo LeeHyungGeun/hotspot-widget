@@ -1,0 +1,35 @@
+{
+  "presets": [
+    [
+      "@babel/preset-env", 
+      {
+        "targets": {
+          "browsers": ["last 2 versions", "ie >= 7"],
+          "node": "current",
+          // "esmodules": true
+        },
+        "modules": "umd",
+        "useBuiltIns": "entry",
+        "corejs": 3,
+        // "debug": true
+      }
+    ]
+  ],
+  "plugins": [
+    ["import", {
+      "libraryName": "hotspot",
+    }]
+    // [
+    //   "@babel/plugin-transform-runtime",
+    //   {
+    //     "absoluteRuntime": false,
+    //     "corejs": 3,
+    //     "helpers": true,
+    //     "regenerator": true,
+    //     "useESModules": false
+    //   }
+    // ]
+    // "transform-es3-property-literals",
+    // "transform-es3-member-expression-literals"
+  ]
+}
