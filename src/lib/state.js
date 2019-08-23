@@ -1,5 +1,7 @@
 const state = {
-  $elm: ''
+  $elm: null,
+  $root: null,
+  dragEvent: null,
 };
 
 export default state;
