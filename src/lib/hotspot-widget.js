@@ -1,18 +1,16 @@
 import watType from 'wat-type';
 import state from './state';
 import Resize from './resize';
+import Drag from './drag';
+import aggregation from './aggregation';
 import { disableDraggable } from './common';
 
-class Hotspot extends Resize {
+class Hotspot extends aggregation(Resize, Drag) {
   constructor($target) {
     if (!watType.isHTMLElement($target)) {
       return new Error('Not Dom element');
     }
     super();
-
-    this.mousemoveEvent = this.mousemoveEvent.bind(this);
-    this.mousedownEvent = this.mousedownEvent.bind(this);
-    this.mouseupEvent = this.mouseupEvent.bind(this); 
 
     const $root = document.createElement('div');
     $root.style.width = '100%';
@@ -22,21 +20,18 @@ class Hotspot extends Resize {
     $root.style.margin = '0';
     $root.style.position = 'relative';
     $target.appendChild($root);
-    this.state = Object.assign(state, {
+    const $elm = this.createRectangle()
+    this.state = {
+      ...state,
       $target,
-      $root
-    });
+      $root,
+      $elm
+    };
 
     this.appendImage(this.state.$root);
-    const $elm = this.createRectangle()
     this.state.$root.appendChild($elm);
     this.addResize($elm);
     this.drag($elm);
-
-    this.state = {
-      ...this.state,
-      $elm
-    };
   }
   appendImage($elm, filepath = '../public/beauty.jpg') {
     const $img = document.createElement('img');
@@ -67,30 +62,6 @@ class Hotspot extends Resize {
 
     $div.appendChild($rect);
     return $div;
-  }
-  mousedownEvent(e) {
-    // e.preventDefault();
-    this.state.dragPosition = {
-      x: e.clientX,
-      y: e.clientY,
-      top: parseInt(this.state.$elm.style.top),
-      left: parseInt(this.state.$elm.style.left)
-    };
-    window.addEventListener('mousemove', this.mousemoveEvent, true);
-    window.addEventListener('mouseup', this.mouseupEvent, true);
-  }
-  mousemoveEvent(e) {
-    // e.preventDefault();
-    const { dragPosition: { x, y, top, left } } = this.state;
-    this.state.$elm.style.top = top + (e.clientY - y) + 'px';
-    this.state.$elm.style.left = left + (e.clientX - x) + 'px';
-  }
-  mouseupEvent(e) {
-    // e.preventDefault();
-    window.removeEventListener('mousemove', this.mousemoveEvent, true);
-  }
-  drag($elm) {
-    $elm.addEventListener('mousedown', this.mousedownEvent, true);
   }
 }
 
