@@ -1,9 +1,12 @@
 // Rollup plugins
-import babel from 'rollup-plugin-babel'
+import babel from 'rollup-plugin-babel';
 // import { eslint } from 'rollup-plugin-eslint'
-import resolve from 'rollup-plugin-node-resolve'
-import commonjs from 'rollup-plugin-commonjs'
-import replace from 'rollup-plugin-replace'
+import resolve from 'rollup-plugin-node-resolve';
+import commonjs from 'rollup-plugin-commonjs';
+import replace from 'rollup-plugin-replace';
+import alias from 'rollup-plugin-alias';
+import path from 'path';
+
 // import memory from 'rollup-plugin-memory'
 
 const pkgName = 'hotspot-widget'
@@ -71,6 +74,16 @@ export default [
       replace({
         exclude: 'node_modules/**',
         ENV: JSON.stringify(process.env.NODE_ENV || 'development'),
+      }),
+      alias({
+        // resolve: ['.js'],
+        resolve: [],
+        entries: [
+          {
+            find: '@',
+            replacement: path.join(__dirname, 'src/lib')
+          }
+        ]
       }),
       // (process.env.NODE_ENV && uglify())
     ]
